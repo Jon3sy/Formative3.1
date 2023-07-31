@@ -1,0 +1,17 @@
+body{
+  background-color: aqua;
+}
+#menu {
+  display: none;
+}
+#menu-container{
+  display: block;
+}
+@media screen and (min-width: 780px) {
+  #menu-container {
+    display: none;
+  }
+#menu {
+ display: block;
+}
+}
