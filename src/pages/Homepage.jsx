@@ -1,4 +1,6 @@
 import {useState, useEffect, useContext} from 'react'
+import axios from 'axios'
+
 
 
 // elements imports 
@@ -9,6 +11,36 @@ import { FidgetSpinner } from 'react-loader-spinner'
 const apiKey = import.meta.env.VITE_YOUR_API_KEY
 
 const Homepage = () => {
+    const [searchTerm, setSearchTerm] = useState('')
+    const [country, setCountry] = useState('se')
+    const [language, setLanguage] = useState('en')
+    const [category, setCategory] = useState('general')
+
+    const [news, setNews] = useState ([])
+
+
+    useEffect (() => {
+      const getNews = async () => {
+        try {
+          const response = await axios.get(
+            // `https://newsapi.org/v2/top-headlines?country=${country}&language=${language}&category=${category}&q=${searchTerm}&apiKey=${apiKey}`
+          );
+          const articles = response.data.articles.map((article) => {
+            return{
+              ...article, 
+              onselect: () => HandleArticleSelect(article)
+            };
+          });
+          getNews(articles)
+          console.log(getNews)
+        }
+        catch (error){
+          console.log("WOP WOP")
+        }
+      };
+      getNews();
+    },[country, language, category, searchTerm, apiKey]
+    )
   return (
     <>
     <FidgetSpinner visible={true}/>
@@ -20,6 +52,8 @@ const Homepage = () => {
             <input type="text" 
             name='search'
             id='search'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             />
         </div>
         <div className='inputs' id='country-box'>
@@ -27,6 +61,8 @@ const Homepage = () => {
             <select 
             name="country" 
             id="country"
+            value={country}
+            onChange={(e) => setCategory(e.target.value)}
             >
                 <option value="se">Sweden</option>
                 <option value="no">Norway</option>
@@ -42,6 +78,8 @@ const Homepage = () => {
             <select 
             name="language" 
             id="language"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
             >
                 <option value="en">English</option>
                 <option value="de">German</option>
@@ -56,6 +94,8 @@ const Homepage = () => {
             <select 
                 name="category" 
                 id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
             >
                 <option value="general">General</option>
                 <option value="business">Business</option>
